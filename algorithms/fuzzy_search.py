@@ -35,7 +35,6 @@ def fuzzy_search(query, data, threshold=0.7):
     return results
 
 def calculate_similarity(str1, str2):
-
     len_str1 = len(str1)
     len_str2 = len(str2)
     max_len = max(len_str1, len_str2)
@@ -57,6 +56,7 @@ def calculate_similarity(str1, str2):
 
     return average_similarity
 
+
 def levenshtein_distance(str1, str2):
     len_str1 = len(str1)
     len_str2 = len(str2)
@@ -76,8 +76,8 @@ def levenshtein_distance(str1, str2):
             cost = 0 if str1[i - 1] == str2[j - 1] else 1
             matrix[i][j] = min(
                 matrix[i - 1][j] + 1,      # Xóa
-                matrix[i][j - 1] + 1,      # Chèn
-                matrix[i - 1][j - 1] + cost  # Thay thế
+                # matrix[i][j - 1] + 1,      # Chèn
+                # matrix[i - 1][j - 1] + cost  # Thay thế
             )
 
     return matrix[len_str1][len_str2]
@@ -88,9 +88,6 @@ def calculate_levenshtein_similarity(str1, str2):
     distance = levenshtein_distance(str1, str2)
     similarity = 1 - distance / max_len
     return similarity
-
-
-
 
 
 if __name__ == "__main__":
