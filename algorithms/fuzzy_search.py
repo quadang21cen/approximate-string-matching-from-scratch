@@ -37,50 +37,42 @@ class Fuzzy_Search_Address:
             ward_query =  arr_query[-9:-3].lstrip()
       
         
-        city_result = fuzzy_search(query=city_query,data= self.dict_city)
-        dist_result = fuzzy_search(query=dist_query,data= self.dict_dist[city_result])
-        print(self.dict_ward[dist_result])
-        ward_result = fuzzy_search(query=ward_query,data= self.dict_ward[dist_result])
+        city_result = fuzzy_search(query=city_query,data= self.dict_city)[0][0]
+        dist_result = fuzzy_search(query=dist_query,data= self.dict_dist[city_result])[0][0]
+        ward_result = fuzzy_search(query=ward_query,data= self.dict_ward[dist_result])[0][0]
         
-
-        # print(city_result)
-        # print(self.dict_dist[city_result])
-        # print(dist_result)
+        return {    "result": {
+                            "province": city_result,
+                            "district": dist_result,
+                            "ward": ward_result
+                            }}
 
 def fuzzy_search(query, data, threshold=0.2):
-
     if query in data:
-        return query
+        return [(query,0.5)]
     results = []
     for item in data:
         similarity = distance.calculate_similarity(query, item)
         if similarity >= threshold:
             results.append((item, similarity))
-
     results.sort(key=lambda x: x[1], reverse=True)
-    print("---------")
-    
-    print(query)
-    print(results)
-    print(data)
-    return results[0][0]
+    return results
 
 
 
 
 
 if __name__ == "__main__":
+    import time
     DATA = getdata.city2dict()
     address_search = Fuzzy_Search_Address(DATA)
-    address_search.search_address(query="Nà Làng Phú Bình, Chiêm Hoá, Tuyên Quang")
+    start_time = time.time()
+    result = address_search.search_address(query="Đá Hàng Hiệp Thạnh, Gò Dầu, Tây Ninh")
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian thực thi': {execution_time:.6f} giây")
+    print(result)
 
 
 
-
-    # # Ví dụ sử dụng
-    # data_set = ["apple", "banana", "orange", "grape", "watermelon", "kiwi"]
-    # query_string = "appl"
-    # search_results = fuzzy_search(query_string, data_set)
-    # print("Kết quả tìm kiếm gần giống với '{}':".format(query_string))
-    # for result, similarity in search_results:
-    #     print(" - {}: {:.2f}".format(result, similarity))
+\
