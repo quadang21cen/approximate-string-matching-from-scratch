@@ -18,16 +18,22 @@ default_path = "data\\Cities.xls"
 def city2dict(path = default_path):
 
   df = pd.read_excel(path)
+
+  df = df.apply(lambda x: x.astype(str).str.lower())
   # grouby
   city_df = df.groupby('Tỉnh Thành Phố')['Mã TP'].first().reset_index()
   dist_df = df.groupby('Quận Huyện')['Tỉnh Thành Phố'].first().reset_index()
   ward_df = df.groupby('Phường Xã')['Quận Huyện'].first().reset_index()
   # processing
   # city_df['Tỉnh Thành Phố'] = city_df['Tỉnh Thành Phố'].apply(lambda row: unidecode(row.replace('Thành phố ','').replace('Tỉnh ','')).lower())  # remove marks
-  city_df['Tỉnh Thành Phố'] = city_df['Tỉnh Thành Phố'].apply(lambda row: row.replace('Thành phố ','').replace('Tỉnh ','').lower())
-  dist_df['Quận Huyện'] = dist_df['Quận Huyện'].apply(lambda row: row.replace('Quận ','').replace('Huyện ','').lower())
-  ward_df['Phường Xã'] = ward_df['Phường Xã'].apply(lambda row: row.replace('Phường ','').replace('Xã ','').replace('Thị trấn ','').lower())
+  city_df['Tỉnh Thành Phố'] = city_df['Tỉnh Thành Phố'].apply(lambda row: row.replace('thành phố ','').replace('tỉnh ',''))
 
+  dist_df['Quận Huyện'] = dist_df['Quận Huyện'].apply(lambda row: row.replace('quận ','').replace('huyện ','').replace('thành phố ',''))
+  dist_df['Tỉnh Thành Phố'] = dist_df['Tỉnh Thành Phố'].apply(lambda row: row.replace('thành phố ','').replace('tỉnh ',''))
+
+
+  ward_df['Phường Xã'] = ward_df['Phường Xã'].apply(lambda row: row.replace('phường ','').replace('xã ','').replace('thị trấn ',''))
+  ward_df['Quận Huyện'] = ward_df['Quận Huyện'].apply(lambda row: row.replace('quận ','').replace('huyện ',''))
   # to dict
   dict_city = [row[1][0] for row in city_df.iterrows()]
   dict_dist = {}
@@ -59,5 +65,5 @@ def full_address2list(path = default_path):
   return list_address
 
 if __name__ == "__main__":
-  data = address2list(path= default_path)
+  data = city2dict(path = default_path)
   print(data)
