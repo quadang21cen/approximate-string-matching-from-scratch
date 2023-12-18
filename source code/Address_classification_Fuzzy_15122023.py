@@ -1,8 +1,9 @@
 """
 File: preprocessing.py
 Author: Quach Dang
+Editor: Thai Tran
+Date: December 15, 2023
 Description: Pre-processing data to prepare for searching
-Date: December 07, 2023
 """
 
 import sys
